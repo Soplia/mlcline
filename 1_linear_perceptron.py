@@ -4,7 +4,9 @@ from sklearn import cluster, datasets
 import numpy as np
 import matplotlib.pyplot as plt
 from keras.utils import plot_model
-
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
 
 '''' 
 -------------------------------------------------------------------------
@@ -20,9 +22,9 @@ colors = np.array([x for x in 'bg'])
 testcolors = np.array([x for x in 'mc'])
 
 # Choose dataset here!
-X, Y = noisy_blobs
-#X, Y = noisy_moons 
-#X, Y = twocircles 
+#X, Y = noisy_blobs
+#X, Y = noisy_moons
+X, Y = twocircles
 
 # data type conversion
 data = np.matrix(X).astype(np.float32)
