@@ -6,9 +6,10 @@ from keras.utils import np_utils
 from keras.utils import plot_model
 import matplotlib.pyplot as plt
 import numpy as np
-
-import warnings
-warnings.filterwarnings('ignore')
+import os
+os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
+# import warnings
+# warnings.filterwarnings('ignore')
 
 '''' 
 -------------------------------------------------------------------------
@@ -52,13 +53,19 @@ print('shape Y test : ', Y_test.shape)
 -------------------------------------------------------------------------
 Model
 -------------------------------------------------------------------------
+Complete the given script to implement a model with 1 hidden layer of 5 neurons with :
+— reLU (rectified Linear Unit) activations in the hidden layer units *
+— categorical cross entropy loss. *
+— Adam optimizer, with a learning rate of 0.01. *
+— batch size of 100 *
 '''
 model = Sequential()	
 model.add(Flatten(input_shape=(28,28)))
 
 #TODO Complete here!
-
-
+model.add(Dense(units=5, activation='relu', input_dim=784))
+model.add(Dense(units=10, activation='softmax', input_dim= 5))
+print(model.summary())
 
 '''' 
 -------------------------------------------------------------------------
@@ -68,12 +75,13 @@ Training
 
 # TODO complete the function compile here:
 #model.compile()
-
+opt = optimizers.Adam(lr = 0.01)
+model.compile(loss='categorical_crossentropy', optimizer= opt, metrics=['accuracy'])
 
 
 #Define the number of epochs and batch size:
-n_epoch = 2
-n_batch = 1
+n_epoch = 6
+n_batch = 100
 
 history = model.fit(X_train, Y_train, validation_data = (X_test,Y_test),  epochs=n_epoch, batch_size=n_batch, verbose = 1)
 

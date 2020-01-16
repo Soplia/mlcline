@@ -6,9 +6,10 @@ from keras.utils import np_utils
 from keras.utils import plot_model
 import matplotlib.pyplot as plt
 import numpy as np
-
-import warnings
-warnings.filterwarnings('ignore')
+import os
+os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
+# import warnings
+# warnings.filterwarnings('ignore')
 
 '''' 
 -------------------------------------------------------------------------
@@ -54,12 +55,32 @@ print('shape Y test : ', Y_test.shape)
 -------------------------------------------------------------------------
 Model
 -------------------------------------------------------------------------
+Build a neural network with :
+
+— a convolutional layer with reLU activation, 64 convolutions 5 × 5 (stride 1 × 1). — a max pooling 2×2 (stride 2×2).
+— a fully connected layer of 1024 neurons (activation ReLU)
+— the output layer
 '''
 model = Sequential()	
 
 #TODO Complete here!
+# First conv2D layer
+model.add(Conv2D(32, (5, 5), padding='same', strides=(1,1), input_shape=(28,28,1)))
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,2)))
 
+# Second conv2D layer
+model.add(Conv2D(64, (5, 5), padding='same', strides=(1,1), input_shape=(12,12,32)))
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,2)))
 
+# 这一个很重要，千万不要忘记进行扁平化
+model.add(Flatten(input_shape=(4, 4, 64)))
+
+model.add(Dense(units=100, activation='relu', input_dim=1024))
+model.add(Dense(units=10, activation='softmax', input_dim= 100))
+
+print(model.summary())
 
 '''' 
 -------------------------------------------------------------------------
@@ -68,11 +89,11 @@ Training
 '''
 
 # TODO complete the function compile here:
-#model.compile()
+opt = optimizers.Adam(lr = 0.01)
+model.compile(loss='categorical_crossentropy', optimizer= opt, metrics=['accuracy'])
 
-# Training using validation split
-history = model.fit(X_train, Y_train, epochs=2, validation_data = (X_test,Y_test), batch_size=100, verbose = 1)
 
+history = model.fit(X_train, Y_train, epochs=6, validation_data = (X_test,Y_test), batch_size=100, verbose = 1)
 
 '''' 
 -------------------------------------------------------------------------
